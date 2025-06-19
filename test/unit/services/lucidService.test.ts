@@ -1,0 +1,168 @@
+// test/unit/services/lucidService.test.ts
+// Unit tests for LucidService
+
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { LucidService, lucidService } from '../../../src/services/lucidService.js';
+
+describe('LucidService', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    lucidService.resetInstance(); // Reset singleton between tests
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  describe('constructor', () => {
+    it('should throw error when no API key is provided', () => {
+      delete process.env.LUCID_API_KEY;
+      
+      expect(() => new LucidService()).toThrow(
+        'Lucid API key is required. Set LUCID_API_KEY environment variable or pass apiKey parameter.'
+      );
+    });
+
+    it('should use provided API key', () => {
+      const service = new LucidService('test-key');
+      expect(service).toBeInstanceOf(LucidService);
+    });
+
+    it('should use environment variable API key', () => {
+      process.env.LUCID_API_KEY = 'env-key';
+      const service = new LucidService();
+      expect(service).toBeInstanceOf(LucidService);
+    });
+  });
+
+  describe('searchDocuments', () => {
+    it('should handle search without keywords', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+      
+      // Mock the SDK call
+      const mockSearchDocuments = vi.fn().mockResolvedValue({
+        data: [
+          {
+            documentId: 'doc1',
+            title: 'Test Document',
+            product: 'lucidchart'
+          }
+        ]
+      });
+      
+      (service as any).sdk = {
+        searchDocuments: mockSearchDocuments
+      };
+      
+      const result = await service.searchDocuments();
+      
+      expect(mockSearchDocuments).toHaveBeenCalledWith(
+        { product: ['lucidchart', 'lucidscale', 'lucidspark'] },
+        { 'Lucid-Api-Version': '1' }
+      );
+      expect(result).toEqual([{
+        documentId: 'doc1',
+        title: 'Test Document',
+        product: 'lucidchart'
+      }]);
+    });
+
+    it('should handle search with keywords', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+      
+      const mockSearchDocuments = vi.fn().mockResolvedValue({
+        data: []
+      });
+      
+      (service as any).sdk = {
+        searchDocuments: mockSearchDocuments
+      };
+      
+      await service.searchDocuments('test query');
+      
+      expect(mockSearchDocuments).toHaveBeenCalledWith(
+        { 
+          product: ['lucidchart', 'lucidscale', 'lucidspark'],
+          keywords: 'test query'
+        },
+        { 'Lucid-Api-Version': '1' }
+      );
+    });
+  });
+
+  describe('getDocument', () => {
+    it('should throw error when document ID is missing', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+      
+      await expect(service.getDocument('')).rejects.toThrow('Document ID is required');
+    });
+
+    it('should get document by ID', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+      
+      const mockDocument = {
+        documentId: 'doc1',
+        title: 'Test Document'
+      };
+      
+      const mockGetOrExportDocument = vi.fn().mockResolvedValue({
+        data: mockDocument
+      });
+      
+      (service as any).sdk = {
+        getOrExportDocument: mockGetOrExportDocument
+      };
+      
+      const result = await service.getDocument('doc1');
+      
+      expect(mockGetOrExportDocument).toHaveBeenCalledWith({
+        id: 'doc1',
+        'Lucid-Api-Version': '1'
+      });
+      expect(result).toEqual(mockDocument);
+    });
+  });
+  describe('exportDocumentAsPng', () => {
+    it('should export document as PNG', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+      
+      const mockDataString = 'fake-png-data';
+      const mockArrayBuffer = new ArrayBuffer(mockDataString.length);
+      const view = new Uint8Array(mockArrayBuffer);
+      for (let i = 0; i < mockDataString.length; i++) {
+        view[i] = mockDataString.charCodeAt(i);
+      }
+      
+      const mockResponse = {
+        ok: true,
+        headers: {
+          get: vi.fn().mockReturnValue('image/png')
+        },
+        arrayBuffer: vi.fn().mockResolvedValue(mockArrayBuffer)
+      };
+      
+      global.fetch = vi.fn().mockResolvedValue(mockResponse);
+      
+      const result = await service.exportDocumentAsPng('doc1');
+      
+      expect(global.fetch).toHaveBeenCalledWith(
+        'https://api.lucid.co/documents/doc1?pageId=0_0',
+        expect.objectContaining({
+          headers: expect.objectContaining({
+            'Authorization': 'Bearer test-key',
+            'Accept': 'image/png'
+          })
+        })
+      );
+      
+      expect(result.contentType).toBe('image/png');
+      expect(result.base64).toBeDefined();
+      expect(result.size).toBe(mockArrayBuffer.byteLength);
+    });
+  });
+});
