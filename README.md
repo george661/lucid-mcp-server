@@ -1,6 +1,7 @@
 # Lucid MCP Server
 
-[![npm version](https://badge.fury.io/js/lucid-mcp-server.svg)](https://badge.fury.io/js/lucid-mcp-server)
+[![npm version](https://img.shields.io/npm/v/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
+[![npm downloads](https://img.shields.io/npm/dm/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Model Context Protocol (MCP) server for Lucid App integration. Enables multimodal LLMs to access and analyze Lucid diagrams through visual exports.
@@ -136,14 +137,14 @@ npm run inspector       # Start MCP Inspector for interactive testing
 ### Document ID Extraction
 Extract document ID from Lucid URLs:
 ```
-https://lucid.app/lucidchart/8077d744-2b83-4f07-bde3-f2b1d9a0df65/edit
+https://lucid.app/lucidchart/demo-document-id-here-12345678/edit
                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
                             This is your document ID
 ```
 
 ### Test Document
-For testing: https://lucid.app/lucidchart/8077d744-2b83-4f07-bde3-f2b1d9a0df65/edit
-Document ID: `8077d744-2b83-4f07-bde3-f2b1d9a0df65`
+For testing: Create a demo document in your Lucid account or use any public document
+Document ID: `demo-document-id-here-12345678`
 
 ## 📋 Requirements
 
