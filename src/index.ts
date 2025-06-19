@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
 import 'dotenv/config';
+import { readFileSync } from 'fs';
+import { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { 
@@ -11,10 +14,25 @@ import {
 } from "./tools/index.js";
 import { log } from "./utils/logger.js";
 
+// Get version from package.json dynamically
+function getVersion(): string {
+  try {
+    const __filename = fileURLToPath(import.meta.url);
+    const __dirname = dirname(__filename);
+    const packagePath = join(__dirname, '..', 'package.json');
+    const packageJson = JSON.parse(readFileSync(packagePath, 'utf-8'));
+    return packageJson.version;
+  } catch (error) {
+    return '0.1.1'; // fallback version
+  }
+}
+
+const VERSION = getVersion();
+
 // Handle CLI arguments
 function showHelp() {
   console.log(`
-Lucid MCP Server v0.1.0
+Lucid MCP Server v${VERSION}
 
 DESCRIPTION:
   Model Context Protocol (MCP) server for Lucid App integration.
@@ -42,7 +60,7 @@ For more information, visit: https://github.com/smartzan63/lucid-mcp-server
 }
 
 function showVersion() {
-  console.log("0.1.0");
+  console.log(VERSION);
 }
 
 // Check CLI arguments before starting server
@@ -66,7 +84,7 @@ if (!process.env.LUCID_API_KEY) {
 
 const server = new McpServer({
   name: "lucid-mcp-server",
-  version: "0.1.0",
+  version: VERSION,
   capabilities: {
     resources: {},
     tools: {},
