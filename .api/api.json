@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "lucid-developer-docs",
+      "source": "@lucid-developer-docs/v1.2#4ulvm23mazsvree",
+      "integrity": "sha512-eE6yGvmu3wKMas06axU7kC4joJiXJSFKDjP4u34Pd2MnMV4p+/e6UJU9OHGy2cXnjC0Aj0l/MeJvmDJJ5R1QYQ==",
+      "installerVersion": "6.1.3"
+    }
+  ]
+}

@@ -95,4 +95,5 @@ tmp/
 temp/
 
 # API auto-generated files (keep the structure but ignore content)
-.api/
+# Commented out because we need .api for NPM package
+# .api/
