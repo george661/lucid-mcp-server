@@ -63,6 +63,42 @@ node ./build/index.js
 npx @modelcontextprotocol/inspector lucid-mcp-server
 ```
 
+## 🔧 VS Code Configuration
+
+### For Regular Users
+
+Add to your VS Code settings (`~/.config/@modelcontextprotocol/mcp-config.json`):
+
+```json
+{
+  "servers": {
+    "lucid-mcp-server": {
+      "type": "stdio",
+      "command": "lucid-mcp-server"
+    }
+  }
+}
+```
+
+### For Developers
+
+If you're developing this package locally, use the development configuration in `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "lucid-mcp-server-dev": {
+      "type": "stdio", 
+      "command": "node",
+      "args": ["./build/index.js"],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}
+```
+
 ## Tools Available
 
 ### 🔍 `get-document`
