@@ -45,6 +45,8 @@ export LUCID_API_KEY="your_api_key_here"
 export AZURE_OPENAI_API_KEY="your_azure_openai_key"  # Optional
 export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com"  # Optional
 export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o"  # Optional
+export MCP_SERVER_TRANSPORT="streamable-http"  # Optional: stdio or streamable-http
+export MCP_HTTP_PORT="3737"  # Optional HTTP port when using streamable-http
 ```
 
 3. **Run the Server**
@@ -75,6 +77,12 @@ Add to your VS Code settings (`~/.config/@modelcontextprotocol/mcp-config.json`)
     "lucid-mcp-server": {
       "type": "stdio",
       "command": "lucid-mcp-server"
+    },
+    "lucid-mcp-server-http": {
+      "type": "streamable-http",
+      "command": "lucid-mcp-server",
+      "args": ["--transport", "streamable-http"],
+      "env": { "MCP_HTTP_PORT": "3737" }
     }
   }
 }

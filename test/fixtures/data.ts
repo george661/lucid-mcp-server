@@ -121,4 +121,6 @@ export const mockEnvironmentVariables = {
   LUCID_CLIENT_ID: 'test-lucid-client-id',
   LUCID_CLIENT_SECRET: 'test-lucid-client-secret',
   LUCID_REFRESH_TOKEN: 'test-lucid-refresh-token',
+  MCP_SERVER_TRANSPORT: 'stdio',
+  MCP_HTTP_PORT: '3000',
 };

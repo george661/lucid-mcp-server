@@ -5,6 +5,7 @@ export function setupTestEnvironment() {
   Object.entries(mockEnvironmentVariables).forEach(([key, value]) => {
     vi.stubEnv(key, value);
   });
+  vi.stubEnv('NODE_ENV', 'test');
 }
 
 export function resetTestEnvironment() {

@@ -6,6 +6,9 @@ import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { createServer } from "http";
+import { randomUUID } from "crypto";
 import { 
   getDocumentSchema, 
   getDocumentHandler,
@@ -44,12 +47,15 @@ USAGE:
 OPTIONS:
   --help, -h     Show this help message
   --version, -v  Show version information
+  --transport, -t <stdio|streamable-http>  Select server transport (default: stdio)
 
 ENVIRONMENT VARIABLES:
   LUCID_API_KEY              Required: Your Lucid API key
   AZURE_OPENAI_API_KEY       Optional: Azure OpenAI API key for AI analysis
   AZURE_OPENAI_ENDPOINT      Optional: Azure OpenAI endpoint
   AZURE_OPENAI_DEPLOYMENT_NAME Optional: Azure OpenAI deployment name
+  MCP_SERVER_TRANSPORT        Optional: stdio or streamable-http
+  MCP_HTTP_PORT               Optional: HTTP port for streamable-http (default: 3737)
 
 TOOLS:
   get-document       Get document metadata and export images
@@ -106,13 +112,44 @@ server.tool(
   searchDocumentsHandler
 );
 
-async function main() {
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
-  log.info("Lucid MCP Server running on stdio");
+export function createTransport(type: string) {
+  if (type === "streamable-http" || type === "http") {
+    return new StreamableHTTPServerTransport({ sessionIdGenerator: () => randomUUID() });
+  }
+  return new StdioServerTransport();
 }
 
-main().catch((error) => {
-  log.error("Fatal error in main():", error);
-  process.exit(1);
-});
+async function main() {
+  const argTransportIndex = args.findIndex((arg) => arg === "--transport" || arg === "-t");
+  const cliTransport = argTransportIndex !== -1 ? args[argTransportIndex + 1] : undefined;
+  const transportType = cliTransport || process.env.MCP_SERVER_TRANSPORT || "stdio";
+  const transport = createTransport(transportType);
+
+  await server.connect(transport);
+
+  if (transport instanceof StreamableHTTPServerTransport) {
+    const port = parseInt(process.env.MCP_HTTP_PORT || "3737", 10);
+    const httpServer = createServer(async (req, res) => {
+      try {
+        await transport.handleRequest(req, res);
+      } catch (err: any) {
+        log.error("HTTP transport error:", err);
+        if (!res.headersSent) {
+          res.writeHead(500).end();
+        }
+      }
+    });
+    httpServer.listen(port, () => {
+      log.info(`Lucid MCP Server running on HTTP port ${port}`);
+    });
+  } else {
+    log.info("Lucid MCP Server running on stdio");
+  }
+}
+
+if (process.env.NODE_ENV !== 'test') {
+  main().catch((error) => {
+    log.error("Fatal error in main():", error);
+    process.exit(1);
+  });
+}
