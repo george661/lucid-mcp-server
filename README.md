@@ -3,14 +3,15 @@
 [![npm version](https://img.shields.io/npm/v/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![npm downloads](https://img.shields.io/npm/dm/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0078d4?style=flat-square&logo=visualstudiocode)](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%7D)
 
 Model Context Protocol (MCP) server for Lucid App integration. Enables multimodal LLMs to access and analyze Lucid diagrams through visual exports.
 
 ## Features
 
 - 🔍 Document discovery and metadata retrieval from LucidChart, LucidSpark, and LucidScale
-- 🖼️ PNG/JPEG image export from Lucid diagrams
-- 🤖 Built-in AI analysis with multimodal LLMs (GPT-4o, Claude 3, etc.)
+- 🖼️ PNG image export from Lucid diagrams
+- 🤖 Built-in AI analysis with multimodal LLMs
 - ⚙️ Environment-based API key management
 - 📝 TypeScript implementation with full test coverage
 - 🔧 MCP Inspector integration for easy testing
@@ -63,7 +64,7 @@ node ./build/index.js
 npx @modelcontextprotocol/inspector lucid-mcp-server
 ```
 
-## 🔧 VS Code Configuration
+## 🔧 Manual VS Code Configuration
 
 ### For Regular Users
 
@@ -134,19 +135,19 @@ List documents in your Lucid account
 
 ```
 src/
-├── index.ts              # MCP server entry point
+├── index.ts               # MCP server entry point
 ├── services/
-│   └── lucidService.ts   # Lucid API integration
-├── tools/                # MCP tool implementations
-│   ├── getDocument.ts    # Document retrieval and analysis
+│   └── lucidService.ts    # Lucid API integration
+├── tools/                 # MCP tool implementations
+│   ├── getDocument.ts     # Document retrieval and analysis
 │   └── searchDocuments.ts # Document search
-├── llm/                  # AI analysis components
-│   ├── image-analyzer.ts # Analysis orchestrator
-│   ├── types.ts         # Type definitions
-│   ├── prompts/         # Analysis prompts
-│   └── providers/       # LLM provider implementations
+├── llm/                   # AI analysis components
+│   ├── image-analyzer.ts  # Analysis orchestrator
+│   ├── types.ts           # Type definitions
+│   ├── prompts/           # Analysis prompts
+│   └── providers/         # LLM provider implementations
 └── utils/
-    └── logger.ts        # Logging utilities
+    └── logger.ts          # Logging utilities
 ```
 
 ## 🔧 Development
@@ -154,10 +155,10 @@ src/
 ### Running Tests
 
 ```bash
-npm test                 # Run all tests
-npm run test:coverage   # Run with coverage report
-npm run test:watch     # Watch mode
-npm run inspector       # Start MCP Inspector for interactive testing
+npm test              # Run all tests
+npm run test:coverage # Run with coverage report
+npm run test:watch    # Watch mode
+npm run inspector     # Start MCP Inspector for interactive testing
 ```
 
 ### Adding New Tools
