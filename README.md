@@ -1,8 +1,6 @@
 # Lucid MCP Server
 
-[![npm version](https:1. Open VS Code
-2. Go to **Extensions** → Search for **"MCP"** → Install **"Model Context Protocol"** extension
-3. Open **Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)img.shields.io/npm/v/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
+[![npm version](https://img.shields.io/npm/v/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![npm downloads](https://img.shields.io/npm/dm/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0078d4?style=flat-square&logo=visualstudiocode)](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%7D)
