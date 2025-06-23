@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![npm downloads](https://img.shields.io/npm/dm/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0078d4?style=flat-square&logo=visualstudiocode)](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%2C%22env%22%3A%7B%22LUCID_API_KEY%22%3A%22%24%7Binput%3Alucid_api_key%7D%22%7D%7D)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0078d4?style=flat-square&logo=visualstudiocode)](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%2C%22env%22%3A%7B%22LUCID_API_KEY%22%3A%22%24%7Binput%3Alucid_api_key%7D%22%7D%2C%22inputs%22%3A%5B%7B%22id%22%3A%22lucid_api_key%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Lucid%20API%20Key%22%7D%5D%7D)
 
 Model Context Protocol (MCP) server for Lucid App integration. Enables multimodal LLMs to access and analyze Lucid diagrams through visual exports.
 
@@ -44,7 +44,7 @@ Model Context Protocol (MCP) server for Lucid App integration. Enables multimoda
 
 Click the **"Install in VS Code"** badge above to automatically configure the server.
 
-For AI analysis features, click here: [**Install with AI Analysis**](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%2C%22env%22%3A%7B%22LUCID_API_KEY%22%3A%22%24%7Binput%3Alucid_api_key%7D%22%2C%22AZURE_OPENAI_API_KEY%22%3A%22%24%7Binput%3Aazure_openai_api_key%7D%22%2C%22AZURE_OPENAI_ENDPOINT%22%3A%22%24%7Binput%3Aazure_openai_endpoint%7D%22%2C%22AZURE_OPENAI_DEPLOYMENT_NAME%22%3A%22%24%7Binput%3Aazure_openai_deployment_name%7D%22%7D%7D)
+For AI analysis features, click here: [**Install with AI Analysis**](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%2C%22env%22%3A%7B%22LUCID_API_KEY%22%3A%22%24%7Binput%3Alucid_api_key%7D%22%2C%22AZURE_OPENAI_API_KEY%22%3A%22%24%7Binput%3Aazure_openai_api_key%7D%22%2C%22AZURE_OPENAI_ENDPOINT%22%3A%22%24%7Binput%3Aazure_openai_endpoint%7D%22%2C%22AZURE_OPENAI_DEPLOYMENT_NAME%22%3A%22%24%7Binput%3Aazure_openai_deployment_name%7D%22%7D%2C%22inputs%22%3A%5B%7B%22id%22%3A%22lucid_api_key%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Lucid%20API%20Key%22%7D%2C%7B%22id%22%3A%22azure_openai_api_key%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20OpenAI%20API%20Key%20(optional)%22%7D%2C%7B%22id%22%3A%22azure_openai_endpoint%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20OpenAI%20Endpoint%20(optional)%22%7D%2C%7B%22id%22%3A%22azure_openai_deployment_name%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20OpenAI%20Deployment%20Name%20(optional)%22%7D%5D%7D)
 
 ### Manual Configuration
 
