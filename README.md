@@ -48,6 +48,7 @@ Model Context Protocol (MCP) server for Lucid App integration. Enables multimoda
 4. Choose **"npm"** as source
 5. Enter package name: **`lucid-mcp-server`**
 6. VS Code will automatically add the server to your configuration and prompt for API keys
+7. Verify automatically created configuration, because AI can make mistakes.
 
 ### Method 2: Quick Install Link
 
