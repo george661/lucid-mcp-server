@@ -1,6 +1,6 @@
 {
   "name": "lucid-mcp-server",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Model Context Protocol (MCP) server for Lucid App integration with multimodal AI analysis",
   "main": "./build/index.js",
   "type": "module",
@@ -19,6 +19,7 @@
     "setup": "npm run build && echo 'Add to your MCP config:' && echo '{\"servers\":{\"lucid-mcp-server\":{\"type\":\"stdio\",\"command\":\"lucid-mcp-server\"}}}'",
     "prepublishOnly": "npm run build && npm test",
     "prepack": "npm run build",
+    "postinstall": "cd .api/apis/lucid-developer-docs && npm install",
     "check-publication": "node ./scripts/check-publication.js"
   },
   "keywords": [
@@ -45,7 +46,10 @@
   "dependencies": {
     "@api/lucid-developer-docs": "file:.api/apis/lucid-developer-docs",
     "@modelcontextprotocol/sdk": "^1.13.0",
+    "api": "^6.1.3",
     "dotenv": "^16.5.0",
+    "json-schema-to-ts": "^2.8.0-beta.0",
+    "oas": "^20.11.0",
     "openai": "^5.5.1",
     "zod": "^3.25.67"
   },

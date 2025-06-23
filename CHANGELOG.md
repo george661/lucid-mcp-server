@@ -7,7 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2025-06-19
+## [0.1.3] - 2025-06-23
+
+### Added
+- Utility functions in lucidModels.ts (validation, filtering, sorting)
+- Comprehensive unit and integration tests (81%+ coverage)
+
+### Fixed
+- **Critical**: "Cannot find module 'oas'" error in npm package
+- isValidLucidDocument type guard returning null instead of false
+
+### Changed
+- **Major refactoring**: Extracted logic from index.ts into separate modules (cli, config, server)
+- Streamlined README.md for easier installation
+- Improved error handling and environment validation
+
+## [0.1.0] - [0.1.2] - 2025-06-19
 
 ### Added
 - Initial release of Lucid MCP Server
