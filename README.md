@@ -1,9 +1,11 @@
 # Lucid MCP Server
 
-[![npm version](https://img.shields.io/npm/v/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
+[![npm version](https:1. Open VS Code
+2. Go to **Extensions** → Search for **"MCP"** → Install **"Model Context Protocol"** extension
+3. Open **Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)img.shields.io/npm/v/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![npm downloads](https://img.shields.io/npm/dm/lucid-mcp-server.svg)](https://www.npmjs.com/package/lucid-mcp-server)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0078d4?style=flat-square&logo=visualstudiocode)](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%2C%22env%22%3A%7B%22LUCID_API_KEY%22%3A%22%24%7Binput%3Alucid_api_key%7D%22%7D%2C%22inputs%22%3A%5B%7B%22id%22%3A%22lucid_api_key%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Lucid%20API%20Key%22%7D%5D%7D)
+[![Install in VS Code](https://img.shields.io/badge/Install_in-VS_Code-0078d4?style=flat-square&logo=visualstudiocode)](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%7D)
 
 Model Context Protocol (MCP) server for Lucid App integration. Enables multimodal LLMs to access and analyze Lucid diagrams through visual exports.
 
@@ -40,13 +42,25 @@ Model Context Protocol (MCP) server for Lucid App integration. Enables multimoda
 
 ## VS Code Configuration
 
-### Automatic Installation (Recommended)
+### Method 1: Through VS Code UI (Recommended)
 
-Click the **"Install in VS Code"** badge above to automatically configure the server.
+1. Open VS Code
+2. Open **Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+3. Run command: **"MCP: Add Server"**
+4. Choose **"npm"** as source
+5. Enter package name: **`lucid-mcp-server`**
+6. VS Code will automatically add the server to your configuration and prompt for API keys
 
-For AI analysis features, click here: [**Install with AI Analysis**](https://vscode.dev/redirect/mcp/install?name=lucid-mcp-server&config=%7B%22type%22%3A%22stdio%22%2C%22command%22%3A%22lucid-mcp-server%22%2C%22env%22%3A%7B%22LUCID_API_KEY%22%3A%22%24%7Binput%3Alucid_api_key%7D%22%2C%22AZURE_OPENAI_API_KEY%22%3A%22%24%7Binput%3Aazure_openai_api_key%7D%22%2C%22AZURE_OPENAI_ENDPOINT%22%3A%22%24%7Binput%3Aazure_openai_endpoint%7D%22%2C%22AZURE_OPENAI_DEPLOYMENT_NAME%22%3A%22%24%7Binput%3Aazure_openai_deployment_name%7D%22%7D%2C%22inputs%22%3A%5B%7B%22id%22%3A%22lucid_api_key%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Lucid%20API%20Key%22%7D%2C%7B%22id%22%3A%22azure_openai_api_key%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20OpenAI%20API%20Key%20(optional)%22%7D%2C%7B%22id%22%3A%22azure_openai_endpoint%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20OpenAI%20Endpoint%20(optional)%22%7D%2C%7B%22id%22%3A%22azure_openai_deployment_name%22%2C%22type%22%3A%22promptString%22%2C%22description%22%3A%22Azure%20OpenAI%20Deployment%20Name%20(optional)%22%7D%5D%7D)
+### Method 2: Quick Install Link
 
-### Manual Configuration
+Click the **"Install in VS Code"** badge above, then:
+
+1. Click **"Install"** when prompted
+2. **Add environment variables** to your VS Code `settings.json` (see Manual Configuration below)
+3. **Restart VS Code** to apply changes
+4. Server will prompt for API keys when first used
+
+### Method 3: Manual Configuration
 
 Add this to your VS Code `settings.json`:
 
@@ -91,7 +105,11 @@ Add this to your VS Code `settings.json`:
 }
 ```
 
-### Usage Examples
+### How It Works
+
+After configuration, the server will prompt you for API keys when first used:
+- **Lucid API Key** (required) - Get from [Lucid Developer Portal](https://developer.lucid.co/docs/api-keys)
+- **Azure OpenAI keys** (optional) - Only needed for AI diagram analysis
 
 **Basic commands** (works with just Lucid API key):
 - "Show me all my Lucid documents"
