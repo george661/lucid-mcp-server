@@ -120,7 +120,20 @@ After configuration, the server will prompt you for API keys when first used:
 
 ## Available Tools
 
-### 🔍 `get-document`
+### 🔍 `search-documents`  
+List documents in your Lucid account
+
+**Parameters:**
+- `keywords` (string, optional) - Search keywords to filter documents
+
+**Example:**
+```json
+{
+  "keywords": "architecture diagram"
+}
+```
+
+### 📋 `get-document`
 Get document metadata and optionally analyze with AI
 
 **Parameters:**
@@ -134,28 +147,6 @@ Get document metadata and optionally analyze with AI
   "documentId": "demo-document-id-here-12345678/edit",
   "analyzeImage": true
 }
-```
-
-### 📋 `search-documents`  
-List documents in your Lucid account
-
-**Parameters:**
-- `keywords` (string, optional) - Search keywords to filter documents
-
-**Example:**
-```json
-{
-  "keywords": "architecture diagram"
-}
-```
-
-## Document ID Extraction
-
-Extract document ID from Lucid URLs:
-```
-https://lucid.app/lucidchart/demo-document-id-here-12345678/edit
-                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-                            This is your document ID
 ```
 
 ## Small Demo
