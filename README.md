@@ -181,7 +181,7 @@ https://lucid.app/lucidchart/demo-document-id-here-12345678/edit
 
 - [Model Context Protocol](https://modelcontextprotocol.io/)
 - [Lucid Developer API](https://developer.lucid.co/)
-- [MCP SDK Documentation](https://github.com/modelcontextprotocol/sdk)
+- [MCP Typescript SDK Documentation](https://github.com/modelcontextprotocol/typescript-sdk)
 
 ## 📄 License
 
