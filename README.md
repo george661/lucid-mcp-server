@@ -158,6 +158,9 @@ https://lucid.app/lucidchart/demo-document-id-here-12345678/edit
                             This is your document ID
 ```
 
+## Small Demo
+![image](https://github.com/user-attachments/assets/eb6a2870-2544-4c2f-8b26-aa2b93e8972a)
+
 ## Requirements
 
 - **Node.js 18+** 
