@@ -31,6 +31,8 @@ Model Context Protocol (MCP) server for Lucid App integration. Enables multimoda
    export AZURE_OPENAI_API_KEY="your_azure_openai_key"
    export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com"  
    export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o"
+   export OPENAI_API_KEY="your_openai_api_key"
+   export OPENAI_MODEL="gpt-4o"
    ```
 
 4. **Test it works**:
@@ -74,7 +76,9 @@ Add this to your VS Code `settings.json`:
           "LUCID_API_KEY": "${input:lucid_api_key}",
           "AZURE_OPENAI_API_KEY": "${input:azure_openai_api_key}",
           "AZURE_OPENAI_ENDPOINT": "${input:azure_openai_endpoint}",
-          "AZURE_OPENAI_DEPLOYMENT_NAME": "${input:azure_openai_deployment_name}"
+          "AZURE_OPENAI_DEPLOYMENT_NAME": "${input:azure_openai_deployment_name}",
+          "OPENAI_API_KEY": "${input:openai_api_key}",
+          "OPENAI_MODEL": "${input:openai_model}"
         }
       }
     },
@@ -98,6 +102,16 @@ Add this to your VS Code `settings.json`:
         "id": "azure_openai_deployment_name",
         "type": "promptString",
         "description": "Azure OpenAI Deployment Name (optional - for AI analysis)"
+      },
+      {
+        "id": "openai_api_key",
+        "type": "promptString", 
+        "description": "OpenAI API Key (optional - for AI analysis)"
+      },
+      {
+        "id": "openai_model",
+        "type": "promptString",
+        "description": "OpenAI Model (optional - for AI analysis, default: gpt-4o)"
       }
     ]
   }

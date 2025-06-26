@@ -116,6 +116,7 @@ export const mockEnvironmentVariables = {
   AZURE_OPENAI_API_KEY: 'test-azure-key',
   AZURE_OPENAI_ENDPOINT: 'https://test.openai.azure.com',
   AZURE_OPENAI_DEPLOYMENT: 'gpt-4o',
+  OPENAI_API_KEY: 'test-openai-key',
   GITHUB_TOKEN: 'ghp_test-github-token-for-testing',
   LUCID_API_KEY: 'test-lucid-api-key',
   LUCID_CLIENT_ID: 'test-lucid-client-id',

@@ -1,5 +1,5 @@
 import { AnalysisRequest, AnalysisResult, LLMProvider } from './types.js';
-import { AzureOpenAIClient } from './providers/azure-openai-client.js';
+import { createAzureOpenAIClient, createOpenAIClient } from './providers/openai-client.js';
 import { log } from '../utils/logger.js';
 
 export class ImageAnalyzer {
@@ -9,26 +9,34 @@ export class ImageAnalyzer {
 
   constructor() {
     this.initializeProviders();
-  }  private initializeProviders(): void {
+  }
+  private initializeProviders(): void {
     const preferredProvider = process.env.LLM_PROVIDER || 'azure-openai';
-    
     // Initialize available providers
-    const azureClient = new AzureOpenAIClient();
+    const azureClient = createAzureOpenAIClient();
+    const openAIClient = createOpenAIClient();
 
     // Add available providers
     if (azureClient.isAvailable()) {
       this.providers.push(azureClient);
+    }
+    if (openAIClient.isAvailable()) {
+      this.providers.push(openAIClient);
     }
 
     // Set primary provider based on preference and availability
     if (preferredProvider === 'azure-openai' && azureClient.isAvailable()) {
       this.primaryProvider = azureClient;
       this.fallbackProvider = null;
+    } else if (preferredProvider === 'openai' && openAIClient.isAvailable()) {
+      this.primaryProvider = openAIClient;
+      this.fallbackProvider = null;
     } else {
       // Auto-select the first available provider
       this.primaryProvider = this.providers[0] || null;
       this.fallbackProvider = null;
-    }    log.debug('ImageAnalyzer initialized:');
+    }
+    log.debug('ImageAnalyzer initialized:');
     log.debug(`- Primary provider: ${this.primaryProvider?.name || 'none'}`);
     log.debug(`- Total providers available: ${this.providers.length}`);
   }
