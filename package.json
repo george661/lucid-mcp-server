@@ -19,7 +19,7 @@
     "setup": "npm run build && echo 'Add to your MCP config:' && echo '{\"servers\":{\"lucid-mcp-server\":{\"type\":\"stdio\",\"command\":\"lucid-mcp-server\"}}}'",
     "prepublishOnly": "npm run build && npm test",
     "prepack": "npm run build",
-    "postinstall": "cd .api/apis/lucid-developer-docs && npm install",
+    
     "check-publication": "node ./scripts/check-publication.js"
   },
   "keywords": [
@@ -41,6 +41,7 @@
     "@vitest/coverage-v8": "^3.2.4",
     "@vitest/ui": "^3.2.4",
     "ts-node": "^10.9.2",
+    "@api/lucid-developer-docs": "file:.api/apis/lucid-developer-docs",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3",
     "vite": "^7.0.0",

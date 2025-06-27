@@ -1,4 +1,6 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+
+vi.unmock('../../../src/utils/logger.js');
 
 // Important: import the logger dynamically after the stderr moc to make the tests work correctly
 

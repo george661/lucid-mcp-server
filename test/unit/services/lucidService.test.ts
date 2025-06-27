@@ -164,5 +164,85 @@ describe('LucidService', () => {
       expect(result.base64).toBeDefined();
       expect(result.size).toBe(mockArrayBuffer.byteLength);
     });
+
+    it('should throw error when export fails', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500, statusText: 'Internal Server Error' });
+
+      await expect(service.exportDocumentAsPng('doc1')).rejects.toThrow('Failed to export document doc1 as PNG: Failed to export document as PNG: 500 Internal Server Error');
+    });
+
+    it('should throw error when content type is not an image', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      const mockResponse = {
+        ok: true,
+        headers: { get: vi.fn().mockReturnValue('application/json') },
+        arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(0))
+      };
+
+      global.fetch = vi.fn().mockResolvedValue(mockResponse);
+
+      await expect(service.exportDocumentAsPng('doc1')).rejects.toThrow('Failed to export document doc1 as PNG: Expected image, got: application/json');
+    });
+
+    it('should throw error when document ID is missing for export', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      await expect(service.exportDocumentAsPng('')).rejects.toThrow('Document ID is required');
+    });
+
+    it('should use default content type when header is missing', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      const mockDataString = 'fake-png-data';
+      const mockArrayBuffer = new ArrayBuffer(mockDataString.length);
+      const view = new Uint8Array(mockArrayBuffer);
+      for (let i = 0; i < mockDataString.length; i++) {
+        view[i] = mockDataString.charCodeAt(i);
+      }
+
+      const mockResponse = {
+        ok: true,
+        headers: {
+          get: vi.fn().mockReturnValue(null)
+        },
+        arrayBuffer: vi.fn().mockResolvedValue(mockArrayBuffer)
+      };
+
+      global.fetch = vi.fn().mockResolvedValue(mockResponse);
+
+      const result = await service.exportDocumentAsPng('doc1');
+
+      expect(result.contentType).toBe('image/png');
+      expect(result.base64).toBeDefined();
+    });
+  });
+
+  describe('Error Handling', () => {
+    it('should handle search API errors', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      const mockSearchDocuments = vi.fn().mockRejectedValue(new Error('API Error'));
+      (service as any).sdk = { searchDocuments: mockSearchDocuments };
+
+      await expect(service.searchDocuments('test')).rejects.toThrow('Failed to search documents: API Error');
+    });
+
+    it('should handle get document API errors', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      const mockGetOrExportDocument = vi.fn().mockRejectedValue(new Error('API Error'));
+      (service as any).sdk = { getOrExportDocument: mockGetOrExportDocument };
+
+      await expect(service.getDocument('doc1')).rejects.toThrow('Failed to get document doc1: API Error');
+    });
   });
 });
