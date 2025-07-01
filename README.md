@@ -7,63 +7,137 @@
 
 Model Context Protocol (MCP) server for Lucid App integration. Enables multimodal LLMs to access and analyze Lucid diagrams through visual exports.
 
+## Table of Contents
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Usage](#usage)
+- [VS Code Integration](#vs-code-integration)
+- [Contributing](#contributing)
+- [References](#references)
+- [License](#license)
+
 ## Features
 
 - 🔍 **Document discovery** and metadata retrieval from LucidChart, LucidSpark, and LucidScale
 - 🖼️ **PNG image export** from Lucid diagrams  
-- 🤖 **AI-powered diagram analysis** with multimodal LLMs (requires Azure OpenAI)
-- ⚙️ **Environment-based API key management**
+- 🤖 **AI-powered diagram analysis** with multimodal LLMs (supports Azure OpenAI and OpenAI)
+- ⚙️ **Environment-based API key management** with automatic fallback from Azure to OpenAI.
 - 📝 **TypeScript implementation** with full test coverage
 - 🔧 **MCP Inspector integration** for easy testing
 
+## Prerequisites
+
+Before you begin, ensure you have the following:
+
+- **Node.js**: Version 18 or higher.
+- **Lucid API Key**: A key from the [Lucid Developer Portal](https://developer.lucid.co/docs/api-keys) is **required** for all features.
+- **AI Provider Key (Optional)**: For AI-powered diagram analysis, you need an API key for either:
+    - [Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
+    - [OpenAI](https://platform.openai.com/)
+
 ## Quick Start
 
-1. **Install the package**: `npm install -g lucid-mcp-server`
+Follow these steps to get the server running.
 
-2. **Get your Lucid API Key** from [Lucid Developer Portal](https://developer.lucid.co/docs/api-keys) ⚠️ **REQUIRED**
+### 1. Install
+Install the package globally from npm:
+```bash
+npm install -g lucid-mcp-server
+```
 
-3. **Set environment variable**:
-   ```bash
-   # Required
-   export LUCID_API_KEY="your_api_key_here"
-   
-   # Optional (for AI analysis)
-   export AZURE_OPENAI_API_KEY="your_azure_openai_key"
-   export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com"  
-   export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o"
-   export OPENAI_API_KEY="your_openai_api_key"
-   export OPENAI_MODEL="gpt-4o"
-   ```
+### 2. Configure
+Set the following environment variables in your terminal. Only the Lucid API key is required.
 
-4. **Test it works**:
-   ```bash
-   npx @modelcontextprotocol/inspector lucid-mcp-server
-   ```
+```bash
+# Required for all features
+export LUCID_API_KEY="your_api_key_here"
 
-## VS Code Configuration
+# Optional: For AI analysis, configure either Azure OpenAI or OpenAI
+
+# Option 1: Azure OpenAI (takes precedence)
+export AZURE_OPENAI_API_KEY="your_azure_openai_key"
+export AZURE_OPENAI_ENDPOINT="https://your-resource.openai.azure.com"  
+export AZURE_OPENAI_DEPLOYMENT_NAME="gpt-4o"
+
+# Option 2: OpenAI (used as a fallback if Azure is not configured)
+export OPENAI_API_KEY="your_openai_api_key"
+export OPENAI_MODEL="gpt-4o" # Optional, defaults to gpt-4o
+```
+> **Note**: The server automatically uses Azure OpenAI if `AZURE_OPENAI_API_KEY` is set. If not, it falls back to OpenAI if `OPENAI_API_KEY` is provided.
+
+### 3. Verify
+Test your installation using the MCP Inspector:
+```bash
+npx @modelcontextprotocol/inspector lucid-mcp-server
+```
+
+## Usage
+
+Once the server is running, you can interact with it using natural language or by calling its tools directly.
+
+### Example Prompts
+
+- **Basic commands** (works with just a Lucid API key):
+  - *"Show me all my Lucid documents"*
+  - *"Get information about the document with ID: [document-id]"*
+
+- **AI Analysis** (requires Azure OpenAI or OpenAI setup):
+  - *"Analyze this diagram: [document-id]"*
+  - *"What does this Lucid diagram show: [document-id]"*
+
+### Available Tools
+
+#### 🔍 `search-documents`  
+Lists documents in your Lucid account.
+
+- **Parameters:**
+  - `keywords` (string, optional): Search keywords to filter documents.
+- **Example:**
+  ```json
+  {
+    "keywords": "architecture diagram"
+  }
+  ```
+
+#### 📋 `get-document`
+Gets document metadata and can optionally perform AI analysis on its visual content.
+
+- **Parameters:**
+  - `documentId` (string): The ID of the document from the Lucid URL.
+  - `analyzeImage` (boolean, optional): Set to `true` to perform AI analysis. ⚠️ **Requires Azure or OpenAI key.**
+  - `pageId` (string, optional): The specific page to export (default: "0_0").
+- **Example:**
+  ```json
+  {
+    "documentId": "demo-document-id-here-12345678/edit",
+    "analyzeImage": true
+  }
+  ```
+
+## VS Code Integration
+
+You can integrate the server directly into Visual Studio Code.
 
 ### Method 1: Through VS Code UI (Recommended)
 
-1. Open VS Code
-2. Open **Command Palette** (`Ctrl+Shift+P` / `Cmd+Shift+P`)
-3. Run command: **"MCP: Add Server"**
-4. Choose **"npm"** as source
-5. Enter package name: **`lucid-mcp-server`**
-6. VS Code will automatically add the server to your configuration and prompt for API keys
-7. Verify automatically created configuration, because AI can make mistakes.
+1.  Open the **Command Palette** (`Ctrl+Shift+P` or `Cmd+Shift+P`).
+2.  Run the command: **"MCP: Add Server"**.
+3.  Choose **"npm"** as the source.
+4.  Enter the package name: **`lucid-mcp-server`**.
+5.  VS Code will guide you through the rest of the setup.
+6.  Verify automatically created configuration, because AI can make mistakes
 
 ### Method 2: Quick Install Link
 
-Click the **"Install in VS Code"** badge above, then:
-
-1. Click **"Install"** when prompted
-2. **Add environment variables** to your VS Code `settings.json` (see Manual Configuration below)
-3. **Restart VS Code** to apply changes
-4. Server will prompt for API keys when first used
+Click the **"Install in VS Code"** badge at the top of this README, then follow the on-screen prompts. You will need to configure the environment variables manually in your `settings.json`.
 
 ### Method 3: Manual Configuration
 
-Add this to your VS Code `settings.json`:
+<details>
+<summary>Click to view manual `settings.json` configuration</summary>
+
+Add the following JSON to your VS Code `settings.json` file. This method provides the most control and is useful for custom setups.
 
 ```json
 {
@@ -91,96 +165,44 @@ Add this to your VS Code `settings.json`:
       {
         "id": "azure_openai_api_key",
         "type": "promptString", 
-        "description": "Azure OpenAI API Key (optional - for AI analysis)"
+        "description": "Azure OpenAI API Key (Optional, for AI analysis)"
       },
       {
         "id": "azure_openai_endpoint",
         "type": "promptString",
-        "description": "Azure OpenAI Endpoint (optional - for AI analysis)"
+        "description": "Azure OpenAI Endpoint (Optional, for AI analysis)"
       },
       {
         "id": "azure_openai_deployment_name",
         "type": "promptString",
-        "description": "Azure OpenAI Deployment Name (optional - for AI analysis)"
+        "description": "Azure OpenAI Deployment Name (Optional, for AI analysis)"
       },
       {
         "id": "openai_api_key",
         "type": "promptString", 
-        "description": "OpenAI API Key (optional - for AI analysis)"
+        "description": "OpenAI API Key (Optional, for AI analysis - used if Azure is not configured)"
       },
       {
         "id": "openai_model",
         "type": "promptString",
-        "description": "OpenAI Model (optional - for AI analysis, default: gpt-4o)"
+        "description": "OpenAI Model (Optional, for AI analysis, default: gpt-4o)"
       }
     ]
   }
 }
 ```
-
-### How It Works
-
-After configuration, the server will prompt you for API keys when first used:
-- **Lucid API Key** (required) - Get from [Lucid Developer Portal](https://developer.lucid.co/docs/api-keys)
-- **Azure OpenAI keys** (optional) - Only needed for AI diagram analysis
-
-**Basic commands** (works with just Lucid API key):
-- "Show me all my Lucid documents"
-- "Get information about this document: [document-id]"
-
-**AI Analysis** (requires Azure OpenAI setup):
-- "Analyze this diagram: [document-id]"
-- "What does this Lucid diagram show: [document-id]"
-
-## Available Tools
-
-### 🔍 `search-documents`  
-List documents in your Lucid account
-
-**Parameters:**
-- `keywords` (string, optional) - Search keywords to filter documents
-
-**Example:**
-```json
-{
-  "keywords": "architecture diagram"
-}
-```
-
-### 📋 `get-document`
-Get document metadata and optionally analyze with AI
-
-**Parameters:**
-- `documentId` (string) - Document ID from Lucid URL  
-- `analyzeImage` (boolean, optional) - Perform AI analysis ⚠️ **Requires Azure OpenAI**
-- `pageId` (string, optional) - Page ID to export (default: "0_0")
-
-**Example:**
-```json
-{
-  "documentId": "demo-document-id-here-12345678/edit",
-  "analyzeImage": true
-}
-```
+</details>
 
 ## Small Demo
 ![image](https://github.com/user-attachments/assets/eb6a2870-2544-4c2f-8b26-aa2b93e8972a)
 
-## Requirements
-
-- **Node.js 18+** 
-- **Lucid API key** ([Get one here](https://developer.lucid.co/docs/api-keys)) ⚠️ **Required**
-- **Azure OpenAI** (optional, for AI analysis features)
-
-> 💡 **Note**: Without Azure OpenAI, document search and metadata work normally. AI analysis requires Azure OpenAI configuration.
-
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1.  Fork the repository.
+2.  Create your feature branch (`git checkout -b feature/amazing-feature`).
+3.  Commit your changes (`git commit -m 'Add amazing feature'`).
+4.  Push to the branch (`git push origin feature/amazing-feature`).
+5.  Open a Pull Request.
 
 ## 📚 References
 
