@@ -1,37 +1,42 @@
+// Move all mock setup to the very top, before any imports
+const mockAzureProvider = {
+  name: 'azure-openai',
+  isAvailable: vi.fn(() => true),
+  analyzeImage: vi.fn()
+};
+const mockOpenAIProvider = {
+  name: 'openai',
+  isAvailable: vi.fn(() => true),
+  analyzeImage: vi.fn()
+};
+
+vi.mock('../../../src/llm/providers/openai-client.js', () => ({
+  createAzureOpenAIClient: () => mockAzureProvider,
+  createOpenAIClient: () => mockOpenAIProvider
+}));
+
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ImageAnalyzer } from '../../../src/llm/image-analyzer.js';
 import { AnalysisRequest } from '../../../src/llm/types.js';
 import { mockImageBase64 } from '../../fixtures/data.js';
+import { setupTestEnvironment, resetTestEnvironment } from '../../utils.js';
 
 // Mock the provider classes
 vi.mock('../../../src/llm/providers/azure-openai-client.js', () => ({
-  AzureOpenAIClient: vi.fn()
+  createAzureOpenAIClient: vi.fn()
 }));
 
 describe('ImageAnalyzer', () => {
   let analyzer: ImageAnalyzer;
-  let mockAzureProvider: any;
-  let AzureOpenAIClientMock: any;
 
-  beforeEach(async () => {
-    // Set up environment variables  
+  beforeEach(() => {
+    setupTestEnvironment();
+    // Ensure environment variables are set so the real factories return available clients
     vi.stubEnv('AZURE_OPENAI_API_KEY', 'test-azure-key');
-    vi.stubEnv('AZURE_OPENAI_ENDPOINT', 'https://test.openai.azure.com');
-    vi.stubEnv('AZURE_OPENAI_DEPLOYMENT', 'gpt-4o');
-    
-    // Create mock providers
-    mockAzureProvider = {
-      name: 'azure-openai',
-      isAvailable: vi.fn().mockReturnValue(true),
-      analyzeImage: vi.fn()
-    };
-    
-    // Mock the constructor classes
-    const { AzureOpenAIClient } = await import('../../../src/llm/providers/azure-openai-client.js');
-    
-    AzureOpenAIClientMock = vi.mocked(AzureOpenAIClient);
-    
-    AzureOpenAIClientMock.mockImplementation(() => mockAzureProvider);
+    vi.stubEnv('AZURE_OPENAI_ENDPOINT', 'https://test-resource.openai.azure.com');
+    vi.stubEnv('AZURE_OPENAI_DEPLOYMENT_NAME', 'test-deployment');
+    vi.stubEnv('OPENAI_API_KEY', 'test-openai-key');
+    vi.stubEnv('OPENAI_MODEL', 'gpt-4o');
   });
 
   afterEach(() => {
@@ -113,7 +118,7 @@ describe('ImageAnalyzer', () => {
       analyzer = new ImageAnalyzer();
     });    it('should return available providers', () => {
       const providers = analyzer.getAvailableProviders();
-      expect(providers).toEqual(['azure-openai']);
+      expect(providers).toEqual(['azure-openai', 'openai']);
     });
 
     it('should return provider status', () => {
@@ -126,8 +131,9 @@ describe('ImageAnalyzer', () => {
 
   describe('initialization scenarios', () => {
     it('should handle no available providers', () => {
-      // Mock provider as unavailable
+      // Mock providers as unavailable
       mockAzureProvider.isAvailable.mockReturnValue(false);
+      mockOpenAIProvider.isAvailable.mockReturnValue(false);
       
       analyzer = new ImageAnalyzer();
       
@@ -140,14 +146,25 @@ describe('ImageAnalyzer', () => {
       expect(status.available).toHaveLength(0);
     });
 
-    it('should set different LLM provider when specified', () => {
-      vi.stubEnv('LLM_PROVIDER', 'other-provider');
-      
+    it('should set Azure OpenAI as primary when LLM_PROVIDER is azure-openai', () => {
+      vi.stubEnv('LLM_PROVIDER', 'azure-openai');
       analyzer = new ImageAnalyzer();
-      
-      // Should fallback to first available provider
       const status = analyzer.getCurrentProviderStatus();
       expect(status.primary).toBe('azure-openai');
+    });
+
+    it('should set OpenAI as primary when LLM_PROVIDER is openai', () => {
+      vi.stubEnv('LLM_PROVIDER', 'openai');
+      analyzer = new ImageAnalyzer();
+      const status = analyzer.getCurrentProviderStatus();
+      expect(status.primary).toBe('openai');
+    });
+
+    it('should fallback to first available provider if LLM_PROVIDER is not set or invalid', () => {
+      vi.stubEnv('LLM_PROVIDER', 'invalid-provider');
+      analyzer = new ImageAnalyzer();
+      const status = analyzer.getCurrentProviderStatus();
+      expect(status.primary).toBe('azure-openai'); // Assuming azure-openai is the first available
     });
 
     it('should handle when no providers are available and analyze is called', async () => {
@@ -161,8 +178,8 @@ describe('ImageAnalyzer', () => {
       const result = await analyzer.analyze(mockRequest);
       
       expect(result.success).toBe(false);
-      expect(result.error).toContain('No LLM providers available');
-      expect(result.metadata?.provider).toBe('none');
+      expect(result.error).toContain('All LLM providers failed to analyze the image. Please try again later.');
+      expect(result.metadata?.provider).toBe('all-failed');
     });
   });
 
@@ -248,7 +265,7 @@ describe('ImageAnalyzer', () => {
       const result = await analyzer.analyze(mockRequest);
 
       expect(result.success).toBe(false);
-      expect(result.error).toContain('No LLM providers available');
+      expect(result.error).toContain('All LLM providers failed to analyze the image. Please try again later.');
     });
   });
 });

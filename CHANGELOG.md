@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.4] - 2025-07-01
+
+### Added
+- **OpenAI Provider**: Added support for OpenAI as an alternative to Azure OpenAI
+- Automatic fallback between Azure OpenAI and OpenAI providers based on configuration
+
+### Changed
+- Refactored LLM provider architecture to support multiple providers
+- Updated tests to reflect new provider behavior
+
 ## [0.1.3] - 2025-06-23
 
 ### Added

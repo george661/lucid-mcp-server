@@ -4,13 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    server: {
-      deps: {
-        inline: [
-          '@api/lucid-developer-docs'
-        ]
-      }
-    },
+    
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
@@ -29,14 +23,16 @@ export default defineConfig({
         'coverage/',
         '**/*.d.ts',
         'vitest.config.ts',
-        'test/**'
+        'test/**',
+        './scripts/**',
+        './.api/**',
+        './.api/apis/lucid-developer-docs/**',
       ]
     },
     include: ['test/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts}'],
     exclude: [
-      'test/extractImage.js',
-      'test/mcpClientListDocuments.cjs',
-      'test/mcpClientListDocuments.js'
-    ]
+      '.api/apis/lucid-developer-docs/**'
+    ],
+    setupFiles: ['./test/setup.ts']
   }
 });

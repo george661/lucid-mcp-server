@@ -171,4 +171,35 @@ describe('Main Index Integration', () => {
       expect(startMcpServer).toHaveBeenCalled();
     });
   });
+
+  describe('Fatal Error Handling', () => {
+    it('should catch and log fatal errors in main', async () => {
+      process.argv = ['node', 'index.js'];
+      process.env.NODE_ENV = 'production'; // Not a test environment
+      process.env.VITEST = undefined;
+      Object.defineProperty(import.meta, 'url', { value: `file://${process.argv[1]}` });
+
+      const mockError = new Error('Fatal error');
+      vi.doMock('../../src/config/version.js', () => ({
+        getVersion: vi.fn().mockImplementation(() => {
+          throw mockError;
+        })
+      }));
+
+      const exitSpy = vi.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+      const errorLogSpy = vi.fn();
+      vi.doMock('../../src/utils/logger.js', () => ({
+        log: { error: errorLogSpy, info: vi.fn() }
+      }));
+
+      // Since we are testing the entry point, we need to re-import it
+      await import('../../src/index.js');
+
+      // Allow promises to resolve
+      await new Promise(resolve => setImmediate(resolve));
+
+      expect(errorLogSpy).toHaveBeenCalledWith('Fatal error in main():', mockError);
+      expect(exitSpy).toHaveBeenCalledWith(1);
+    });
+  });
 });

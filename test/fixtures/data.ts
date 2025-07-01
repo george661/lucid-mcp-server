@@ -13,12 +13,12 @@ export const mockLucidDocument = {
   creatorId: 12345,
   lastModifiedUserId: 12345,
   classification: 'Public',
-  customAttributes: [],
-  customTags: [],
-  trashed: null,
+  customAttributes: [{ name: 'project', value: 'lucid-mcp' }],
+  customTags: [{ name: 'diagram' }, { name: 'flowchart' }],
+  trashed: '2024-06-27T00:00:00Z',
   owner: {
     id: 12345,
-    ownerType: 'user',
+    type: 'user',
     name: 'Test User'
   },
   // Legacy compatibility
@@ -48,7 +48,7 @@ export const mockDocumentList = [
     trashed: null,
     owner: {
       id: 67890,
-      ownerType: 'team',
+      type: 'user',
       name: 'Engineering Team'
     },
     // Legacy compatibility
@@ -116,6 +116,7 @@ export const mockEnvironmentVariables = {
   AZURE_OPENAI_API_KEY: 'test-azure-key',
   AZURE_OPENAI_ENDPOINT: 'https://test.openai.azure.com',
   AZURE_OPENAI_DEPLOYMENT: 'gpt-4o',
+  OPENAI_API_KEY: 'test-openai-key',
   GITHUB_TOKEN: 'ghp_test-github-token-for-testing',
   LUCID_API_KEY: 'test-lucid-api-key',
   LUCID_CLIENT_ID: 'test-lucid-client-id',
