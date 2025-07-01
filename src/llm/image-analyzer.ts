@@ -36,9 +36,9 @@ export class ImageAnalyzer {
       this.primaryProvider = this.providers[0] || null;
       this.fallbackProvider = null;
     }
-    log.debug('ImageAnalyzer initialized:');
-    log.debug(`- Primary provider: ${this.primaryProvider?.name || 'none'}`);
-    log.debug(`- Total providers available: ${this.providers.length}`);
+    log.info('ImageAnalyzer initialized:');
+    log.info(`- Primary provider: ${this.primaryProvider?.name || 'none'}`);
+    log.info(`- Total providers available: ${this.providers.length}`);
   }
 
   async analyze(request: AnalysisRequest): Promise<AnalysisResult> {

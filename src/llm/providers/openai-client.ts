@@ -90,6 +90,10 @@ export function createOpenAIClient(config?: Partial<LLMClientConfig>) {
     temperature: 0.1,
     ...config
   };
+  if (!baseConfig.apiKey) {
+    // Return the client with clientInstance = null so that isAvailable() is false
+    return new ParametrizedOpenAIClient('openai', baseConfig);
+  }
   const client = new OpenAI({
     apiKey: baseConfig.apiKey,
     timeout: parseInt(process.env.LLM_TIMEOUT || '120000'),
