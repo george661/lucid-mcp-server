@@ -21,6 +21,7 @@ Model Context Protocol (MCP) server for Lucid App integration. Enables multimoda
 ## Features
 
 - 🔍 **Document discovery** and metadata retrieval from LucidChart, LucidSpark, and LucidScale
+- 📑 **Lightweight tab metadata** for quick document structure overview
 - 🖼️ **PNG image export** from Lucid diagrams  
 - 🤖 **AI-powered diagram analysis** with multimodal LLMs (supports Azure OpenAI and OpenAI)
 - ⚙️ **Environment-based API key management** with automatic fallback from Azure to OpenAI.
@@ -121,6 +122,19 @@ Gets document metadata and can optionally perform AI analysis on its visual cont
   {
     "documentId": "demo-document-id-here-12345678/edit",
     "analyzeImage": true
+  }
+  ```
+
+#### 📑 `get-document-tabs`
+Gets lightweight metadata about all tabs (pages) in a Lucid document without retrieving full content.
+
+- **Parameters:**
+  - `documentId` (string): The ID of the document from the Lucid URL.
+- **Returns:** Document info with page metadata (id, title, index) for quick navigation and overview.
+- **Example:**
+  ```json
+  {
+    "documentId": "demo-document-id-here-12345678/edit"
   }
   ```
 
