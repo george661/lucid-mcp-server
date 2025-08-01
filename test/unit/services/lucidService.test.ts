@@ -224,6 +224,57 @@ describe('LucidService', () => {
     });
   });
 
+  describe('getDocumentContent', () => {
+    it('should successfully get document content', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+      
+      const mockDocumentContent = {
+        id: '8077d744-2b83-4f07-bde3-f2b1d9a0df65',
+        title: 'Test Document',
+        product: 'lucidchart',
+        pages: [
+          { id: '0_0', title: 'Page 1', index: 0 },
+          { id: 'abc123', title: 'Page 2', index: 1 }
+        ]
+      };
+
+      const mockGetDocumentContent = vi.fn().mockResolvedValue({ data: mockDocumentContent });
+      (service as any).sdk = { getDocumentContent: mockGetDocumentContent };
+
+      const result = await service.getDocumentContent('8077d744-2b83-4f07-bde3-f2b1d9a0df65');
+
+      expect(result).toEqual(mockDocumentContent);
+      expect(mockGetDocumentContent).toHaveBeenCalledWith({
+        id: '8077d744-2b83-4f07-bde3-f2b1d9a0df65',
+        'Lucid-Api-Version': '1'
+      });
+    });
+
+    it('should throw error when document ID is missing for content', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      await expect(service.getDocumentContent('')).rejects.toThrow('Document ID is required');
+    });
+
+    it('should handle API errors for document content', async () => {
+      process.env.LUCID_API_KEY = 'test-key';
+      const service = new LucidService();
+
+      const mockGetDocumentContent = vi.fn().mockRejectedValue(new Error('API Error'));
+      (service as any).sdk = { getDocumentContent: mockGetDocumentContent };
+
+      await expect(service.getDocumentContent('test-doc-123')).rejects.toThrow(
+        'Failed to get document content test-doc-123: API Error'
+      );
+      expect(mockGetDocumentContent).toHaveBeenCalledWith({
+        id: 'test-doc-123',
+        'Lucid-Api-Version': '1'
+      });
+    });
+  });
+
   describe('Error Handling', () => {
     it('should handle search API errors', async () => {
       process.env.LUCID_API_KEY = 'test-key';

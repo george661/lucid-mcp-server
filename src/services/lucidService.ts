@@ -94,6 +94,34 @@ export class LucidService {
   }
 
   /**
+   * Get document contents (includes page metadata)
+   */
+  async getDocumentContent(documentId: string) {
+    if (!documentId) {
+      throw new Error('Document ID is required');
+    }
+    
+    log.debug('Lucid SDK get document content request:', { documentId });
+    
+    try {
+      const { data } = await this.sdk.getDocumentContent({
+        id: documentId,
+        'Lucid-Api-Version': '1'
+      });
+      
+      log.debug('Lucid SDK get document content response:', { 
+        documentId: data.id,
+        pageCount: data.pages?.length || 0
+      });
+      
+      return data;
+    } catch (error: any) {
+      log.error('Lucid SDK get document content failed:', error);
+      throw new Error(`Failed to get document content ${documentId}: ${error.message}`);
+    }
+  }
+
+  /**
    * Export document as PNG image
    */
   async exportDocumentAsPng(documentId: string, pageId: string = '0_0'): Promise<LucidImageExport> {
