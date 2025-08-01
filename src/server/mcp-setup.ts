@@ -4,7 +4,9 @@ import {
   getDocumentSchema, 
   getDocumentHandler,
   searchDocumentsSchema,
-  searchDocumentsHandler
+  searchDocumentsHandler,
+  getDocumentTabsSchema,
+  getDocumentTabsHandler
 } from "../tools/index.js";
 import { log } from "../utils/logger.js";
 
@@ -36,6 +38,13 @@ export function createMcpServer(version: string): McpServer {
     "Search Lucid documents in your account returns document list with namesname and their IDs. Supports filtering by keywords",
     searchDocumentsSchema,
     searchDocumentsHandler
+  );
+
+  server.tool(
+    "get-document-tabs",
+    "Get metadata about all tabs (pages) in a Lucid document. Returns compact JSON with document info and page metadata (id, title, index) only - excludes shapes, lines, and other content.",
+    getDocumentTabsSchema,
+    getDocumentTabsHandler
   );
 
   return server;

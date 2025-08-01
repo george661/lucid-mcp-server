@@ -20,7 +20,9 @@ vi.mock('../../../src/tools/index.js', () => ({
   getDocumentSchema: { documentId: { type: 'string' } },
   getDocumentHandler: vi.fn(),
   searchDocumentsSchema: { keywords: { type: 'string' } },
-  searchDocumentsHandler: vi.fn()
+  searchDocumentsHandler: vi.fn(),
+  getDocumentTabsSchema: { documentId: { type: 'string' } },
+  getDocumentTabsHandler: vi.fn()
 }));
 
 vi.mock('../../../src/utils/logger.js', () => ({
@@ -38,7 +40,9 @@ import {
   getDocumentSchema,
   getDocumentHandler,
   searchDocumentsSchema,
-  searchDocumentsHandler
+  searchDocumentsHandler,
+  getDocumentTabsSchema,
+  getDocumentTabsHandler
 } from '../../../src/tools/index.js';
 import { log } from '../../../src/utils/logger.js';
 
@@ -99,10 +103,21 @@ describe('MCP Server Setup', () => {
       );
     });
 
-    it('should register exactly 2 tools', () => {
+    it('should register get-document-tabs tool', () => {
       createMcpServer('1.2.3');
 
-      expect(mockServer.tool).toHaveBeenCalledTimes(2);
+      expect(mockServer.tool).toHaveBeenCalledWith(
+        "get-document-tabs",
+        expect.stringContaining("Get metadata about all tabs"),
+        getDocumentTabsSchema,
+        getDocumentTabsHandler
+      );
+    });
+
+    it('should register exactly 3 tools', () => {
+      createMcpServer('1.2.3');
+
+      expect(mockServer.tool).toHaveBeenCalledTimes(3);
     });
 
     it('should handle different version formats', () => {

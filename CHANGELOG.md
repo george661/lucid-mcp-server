@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.5] - 2025-08-01
+
+### Added
+- **Tab Metadata Tool**: New `get-document-tabs` tool for retrieving lightweight page metadata from Lucidchart documents
+- Returns compact JSON with document info and page metadata (id, title, index) without heavy content like shapes and lines
+- Optimized for LLM usage scenarios and automation workflows
+
+### Changed
+- Enhanced MCP server tool registration to include 3 tools (was 2)
+- Updated test suite to support new tool functionality
+
 ## [0.1.4] - 2025-07-01
 
 ### Added
