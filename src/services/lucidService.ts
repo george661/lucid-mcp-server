@@ -1,7 +1,6 @@
 // src/services/lucidService.ts
-// Lucid API service using official SDK
+// Lucid API service using direct fetch calls
 
-import lucidDeveloperDocs from '../../.api/apis/lucid-developer-docs/index.js';
 import { log } from '../utils/logger.js';
 
 export interface LucidImageExport {
@@ -12,57 +11,72 @@ export interface LucidImageExport {
 
 export class LucidService {
   private apiKey: string;
-  private sdk: any; // Use any to bypass TypeScript issues
+  private baseUrl: string = 'https://api.lucid.co';
 
   constructor(apiKey?: string) {
     this.apiKey = apiKey || process.env.LUCID_API_KEY || '';
     if (!this.apiKey) {
       throw new Error('Lucid API key is required. Set LUCID_API_KEY environment variable or pass apiKey parameter.');
     }
-    
-    // Set up authentication - lucidDeveloperDocs is already an instance
-    this.sdk = lucidDeveloperDocs;
-    this.sdk.auth(this.apiKey);
+  }
+
+  private async fetchLucidAPI(endpoint: string, options: RequestInit = {}): Promise<any> {
+    const url = `${this.baseUrl}${endpoint}`;
+    const headers = {
+      'Authorization': `Bearer ${this.apiKey}`,
+      'Lucid-Api-Version': '1',
+      'Content-Type': 'application/json',
+      ...options.headers,
+    };
+
+    const response = await fetch(url, { ...options, headers });
+
+    if (!response.ok) {
+      throw new Error(`Lucid API error: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
   }
   /**
    * Search for documents using keywords
    */
   async searchDocuments(keywords?: string, product: string[] = ['lucidchart', 'lucidscale', 'lucidspark']) {
     const searchBody: any = { product };
-    
+
     if (keywords && keywords.trim()) {
       searchBody.keywords = keywords.trim();
       log.info(`Searching for documents with keywords: "${keywords.trim()}"`);
     } else {
       log.info('Searching for all documents (no keywords)');
     }
-    
-    log.debug('Lucid SDK search request:', { body: searchBody });
-    
+
+    log.debug('Lucid API search request:', { body: searchBody });
+
     try {
-      const { data } = await this.sdk.searchDocuments(searchBody, {
-        'Lucid-Api-Version': '1'
+      const data = await this.fetchLucidAPI('/documents', {
+        method: 'POST',
+        body: JSON.stringify(searchBody)
       });
-      
-      log.debug('Lucid SDK search response:', { 
+
+      log.debug('Lucid API search response:', {
         dataType: typeof data,
         dataLength: Array.isArray(data) ? data.length : 'not array'
       });
-      
+
       const documents = Array.isArray(data) ? data : [];
       log.info(`Search returned ${documents.length} documents`);
-      
+
       if (documents.length > 0) {
-        log.debug('Found documents:', documents.map((doc: any) => ({ 
-          id: doc.documentId, 
+        log.debug('Found documents:', documents.map((doc: any) => ({
+          id: doc.documentId,
           title: doc.title,
-          product: doc.product 
+          product: doc.product
         })));
       }
-      
+
       return data;
     } catch (error: any) {
-      log.error('Lucid SDK search failed:', error);
+      log.error('Lucid API search failed:', error);
       throw new Error(`Failed to search documents: ${error.message}`);
     }
   }
@@ -73,22 +87,19 @@ export class LucidService {
     if (!documentId) {
       throw new Error('Document ID is required');
     }
-    
-    log.debug('Lucid SDK get document request:', { documentId });
-    
+
+    log.debug('Lucid API get document request:', { documentId });
+
     try {
-      const { data } = await this.sdk.getOrExportDocument({
-        id: documentId,
-        'Lucid-Api-Version': '1'
+      const data = await this.fetchLucidAPI(`/documents/${documentId}`);
+
+      log.debug('Lucid API get document response:', {
+        documentId: data.documentId
       });
-      
-      log.debug('Lucid SDK get document response:', { 
-        documentId: data.documentId 
-      });
-      
+
       return data;
     } catch (error: any) {
-      log.error('Lucid SDK get document failed:', error);
+      log.error('Lucid API get document failed:', error);
       throw new Error(`Failed to get document ${documentId}: ${error.message}`);
     }
   }
@@ -100,23 +111,20 @@ export class LucidService {
     if (!documentId) {
       throw new Error('Document ID is required');
     }
-    
-    log.debug('Lucid SDK get document content request:', { documentId });
-    
+
+    log.debug('Lucid API get document content request:', { documentId });
+
     try {
-      const { data } = await this.sdk.getDocumentContent({
-        id: documentId,
-        'Lucid-Api-Version': '1'
-      });
-      
-      log.debug('Lucid SDK get document content response:', { 
+      const data = await this.fetchLucidAPI(`/documents/${documentId}/content`);
+
+      log.debug('Lucid API get document content response:', {
         documentId: data.id,
         pageCount: data.pages?.length || 0
       });
-      
+
       return data;
     } catch (error: any) {
-      log.error('Lucid SDK get document content failed:', error);
+      log.error('Lucid API get document content failed:', error);
       throw new Error(`Failed to get document content ${documentId}: ${error.message}`);
     }
   }
