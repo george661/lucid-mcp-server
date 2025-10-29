@@ -47,17 +47,24 @@ describe('getDocumentHandler', () => {
 
   it('should analyze image when analyzeImage is true', async () => {
     vi.spyOn(lucidService.instance, 'getDocument').mockResolvedValue(mockLucidDocument);
-    vi.spyOn(lucidService.instance, 'exportDocumentAsPng').mockResolvedValue({ base64: 'fake-png-data' });
+    vi.spyOn(lucidService.instance, 'exportDocumentAsPng').mockResolvedValue({
+      base64: 'fake-png-data',
+      contentType: 'image/png',
+      size: 100
+    });
 
     const result = await getDocumentHandler({
       documentId: 'test-doc-123',
       analyzeImage: true
     });
 
-    expect(result.content).toHaveLength(1);
+    expect(result.content).toHaveLength(2);
     expect(result.content[0].type).toBe('text');
     expect(result.content[0].text).toContain('**Test Document**');
     expect(result.content[0].text).toContain('Mocked analysis result');
+    expect(result.content[1].type).toBe('image');
+    expect(result.content[1].data).toBe('fake-png-data');
+    expect(result.content[1].mimeType).toBe('image/png');
   });
 
   it('should handle documents not found', async () => {
@@ -119,9 +126,11 @@ describe('getDocumentHandler', () => {
       analyzeImage: true
     });
 
-    expect(result.content).toHaveLength(1);
+    expect(result.content).toHaveLength(2);
     expect(result.content[0].type).toBe('text');
     expect(result.content[0].text).toContain('Analysis failed: Mocked analysis failure');
+    expect(result.content[1].type).toBe('image');
+    expect(result.content[1].data).toBe('fake-png-data');
   });
 
   it('should include all optional metadata fields when present', async () => {
@@ -189,5 +198,27 @@ describe('getDocumentHandler', () => {
     const result = await getDocumentHandler({ documentId: 'test-doc-123', analyzeImage: false });
     expect(result.content[0].text).toContain('Created: N/A');
     expect(result.content[0].text).toContain('Last Modified: N/A');
+  });
+
+  it('should export image when exportImage is true', async () => {
+    vi.spyOn(lucidService.instance, 'getDocument').mockResolvedValue(mockLucidDocument);
+    vi.spyOn(lucidService.instance, 'exportDocumentAsPng').mockResolvedValue({
+      base64: 'fake-png-data',
+      contentType: 'image/png',
+      size: 100
+    });
+
+    const result = await getDocumentHandler({
+      documentId: 'test-doc-123',
+      exportImage: true
+    });
+
+    expect(result.content).toHaveLength(2);
+    expect(result.content[0].type).toBe('text');
+    expect(result.content[0].text).toContain('**Test Document**');
+    expect(result.content[0].text).toContain('Document ID: test-doc-123');
+    expect(result.content[1].type).toBe('image');
+    expect(result.content[1].data).toBe('fake-png-data');
+    expect(result.content[1].mimeType).toBe('image/png');
   });
 });
