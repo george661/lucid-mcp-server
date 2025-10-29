@@ -9,7 +9,6 @@
   },
   "scripts": {
     "build": "tsc",
-    "prepare": "test -d build || npm run build",
     "start": "node ./build/index.js",
     "inspector": "npx @modelcontextprotocol/inspector node ./build/index.js",
     "test": "vitest run",
