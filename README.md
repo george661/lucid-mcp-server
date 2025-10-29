@@ -44,7 +44,11 @@ Follow these steps to get the server running.
 
 ### Installing This Fork (with exportImage feature)
 
-This fork adds the `exportImage` parameter to retrieve diagram PNGs without AI analysis. To install:
+This fork adds the `exportImage` parameter to retrieve diagram PNGs without AI analysis.
+
+> **Note**: Direct `npm install -g george661/lucid-mcp-server` fails due to a dependency script issue during GitHub installs. Use the method below instead.
+
+**To install this fork:**
 
 ```bash
 # Clone and install from this repository
@@ -54,6 +58,8 @@ npm install
 npm run build
 npm install -g .
 ```
+
+This method works reliably and gives you the `exportImage` feature immediately.
 
 ### Installing via Smithery
 
