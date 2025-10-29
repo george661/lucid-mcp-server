@@ -8,7 +8,7 @@ yarn.lock
 pnpm-lock.yaml
 
 # Build outputs
-build/
+# Note: build/ is committed for npm installs from GitHub
 dist/
 *.tsbuildinfo
 
