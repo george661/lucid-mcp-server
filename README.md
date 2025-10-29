@@ -46,9 +46,12 @@ Follow these steps to get the server running.
 
 This fork adds the `exportImage` parameter to retrieve diagram PNGs without AI analysis.
 
-> **Note**: Direct `npm install -g george661/lucid-mcp-server` fails due to a dependency script issue during GitHub installs. Use the method below instead.
+**Key improvements:**
+- ✨ New `exportImage` parameter - get diagrams without AI provider keys
+- 🚀 Removed heavy `oas` dependency (92 packages vs 305 originally)
+- 🔧 Direct Lucid API integration via fetch calls
 
-**To install this fork:**
+**To install:**
 
 ```bash
 # Clone and install from this repository
@@ -59,7 +62,7 @@ npm run build
 npm install -g .
 ```
 
-This method works reliably and gives you the `exportImage` feature immediately.
+> **Note**: Direct `npm install -g george661/lucid-mcp-server` installs cleanly now (no dependency script errors!), but build files aren't included due to npm Git packaging limitations. The clone method above works reliably.
 
 ### Installing via Smithery
 
