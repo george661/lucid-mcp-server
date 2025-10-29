@@ -42,6 +42,19 @@ Before you begin, ensure you have the following:
 
 Follow these steps to get the server running.
 
+### Installing This Fork (with exportImage feature)
+
+This fork adds the `exportImage` parameter to retrieve diagram PNGs without AI analysis. To install:
+
+```bash
+# Clone and install from this repository
+git clone https://github.com/george661/lucid-mcp-server.git
+cd lucid-mcp-server
+npm install
+npm run build
+npm install -g .
+```
+
 ### Installing via Smithery
 
 To install lucid-mcp-server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@smartzan63/lucid-mcp-server):
@@ -50,7 +63,7 @@ To install lucid-mcp-server for Claude Desktop automatically via [Smithery](http
 npx -y @smithery/cli install @smartzan63/lucid-mcp-server --client claude
 ```
 
-### 1. Install
+### 1. Install (Original Version)
 Install the package globally from npm:
 ```bash
 npm install -g lucid-mcp-server
@@ -111,14 +124,22 @@ Lists documents in your Lucid account.
   ```
 
 #### 📋 `get-document`
-Gets document metadata and can optionally perform AI analysis on its visual content.
+Gets document metadata and can optionally export diagram images or perform AI analysis.
 
 - **Parameters:**
   - `documentId` (string): The ID of the document from the Lucid URL.
+  - `exportImage` (boolean, optional): Set to `true` to export and return the diagram as PNG. ✨ **New in this fork!** Works without AI keys.
   - `analyzeImage` (boolean, optional): Set to `true` to perform AI analysis. ⚠️ **Requires Azure or OpenAI key.**
   - `pageId` (string, optional): The specific page to export (default: "0_0").
-- **Example:**
+- **Examples:**
   ```json
+  // Get diagram image without AI analysis (no API keys needed)
+  {
+    "documentId": "demo-document-id-here-12345678/edit",
+    "exportImage": true
+  }
+
+  // Get diagram image with AI analysis
   {
     "documentId": "demo-document-id-here-12345678/edit",
     "analyzeImage": true
