@@ -9,6 +9,7 @@
   },
   "scripts": {
     "build": "tsc",
+    "prepare": "npm run build",
     "start": "node ./build/index.js",
     "inspector": "npx @modelcontextprotocol/inspector node ./build/index.js",
     "test": "vitest run",
@@ -19,7 +20,6 @@
     "setup": "npm run build && echo 'Add to your MCP config:' && echo '{\"servers\":{\"lucid-mcp-server\":{\"type\":\"stdio\",\"command\":\"lucid-mcp-server\"}}}'",
     "prepublishOnly": "npm run build && npm test",
     "prepack": "npm run build",
-    
     "check-publication": "node ./scripts/check-publication.js"
   },
   "keywords": [
@@ -67,12 +67,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smartzan63/lucid-mcp-server.git"
+    "url": "git+https://github.com/george661/lucid-mcp-server.git"
   },
   "bugs": {
     "url": "https://github.com/smartzan63/lucid-mcp-server/issues"
   },
-  "homepage": "https://github.com/smartzan63/lucid-mcp-server#readme",
+  "homepage": "https://github.com/george661/lucid-mcp-server#readme",
   "engines": {
     "node": ">=18.0.0"
   },
